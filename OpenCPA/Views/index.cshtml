@@ -1,7 +1,8 @@
 ﻿<html>
-    @Partial['header.html', Model.PageName]
+    @Html.Partial("header", Model.PageName)
     <body style="align-content: center; text-align: center">
         <h1 class="logo">OpenCPA</h1>
         <p><i>The open source City Pop archive. Legal requests to legal@opencpa.org</i></p>
+        <p><b>@Model.NumArchived items archived.</b></p>
     </body>
 </html>

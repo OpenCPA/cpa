@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OpenCPA.Data;
+using OpenCPA.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,11 +20,15 @@ namespace OpenCPA.Models
         public IndexModel()
         {
             //Has the global archived count been set? If so, when?
-            if (StaticUpdateTime.AddMinutes(5) < DateTime.Now)
+            if (StaticUpdateTime.AddMinutes(10) < DateTime.Now)
             {
                 //Needs to be updated.
-                
+                NumArchivedGlobal = DBMan.Instance.Query<Resource>("SELECT * FROM Resources").Count + DBMan.Instance.Query<Track>("SELECT * FROM Tracks").Count;
+                StaticUpdateTime = DateTime.Now;
             }
+
+            //Set the local properties.
+            NumArchived = NumArchivedGlobal;
         }
     }
 }

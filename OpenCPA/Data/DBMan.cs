@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using Config.Net;
 using OpenCPA.Data;
+using OpenCPA.Security;
 using SQLite;
 
 namespace OpenCPA.Database
@@ -28,11 +29,14 @@ namespace OpenCPA.Database
             //Check if it's already active.
             if (Instance != null) { throw new Exception("Database already initialized."); }
 
+            //Get path to DB.
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Settings.DBName);
+
             //Does the database exist already?
-            bool exists = File.Exists(Settings.DBName);
+            bool exists = File.Exists(dbPath);
 
             //Create instance.
-            Instance = new SQLiteConnection(Settings.DBName);
+            Instance = new SQLiteConnection(dbPath);
 
             //If it didn't exist, create the tables.
             if (!exists)
@@ -41,6 +45,17 @@ namespace OpenCPA.Database
                 Instance.CreateTable<Artist>();
                 Instance.CreateTable<Resource>();
                 Instance.CreateTable<Track>();
+                Instance.CreateTable<User>();
+
+                //Create the default user.
+                User defaultUser = new User()
+                {
+                    GUID = Guid.NewGuid().ToString(),
+                    Username = Settings.DefaultUserUsername,
+                    HashedPassword = Hash.Create(Settings.DefaultUserPassword, Settings.PasswordHashStrength),
+                    Permissions = Settings.DefaultUserPermissions
+                };
+                Instance.Insert(defaultUser);
             }
         }
     }
