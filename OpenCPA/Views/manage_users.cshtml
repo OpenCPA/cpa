@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+<body>
+    <h1>User Management</h1>
+    <p><i>Manage users' permissions, delete and create new ones.</i></p>
+    <br>
+    <ul>
+        @foreach (var user in Model.Users)
+        {
+            <p>@user.Username - <a href="/manage/users/deleteuser"></a></p>
+        }
+    </ul>
+</body>
+</html>

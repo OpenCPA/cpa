@@ -19,7 +19,7 @@ public class CPABootstrapper : DefaultNancyBootstrapper
         FormsAuthentication.Enable(pipelines, new FormsAuthenticationConfiguration()
         {
             UserMapper = new UserDB(), //maps GUIDs to users
-            RedirectUrl = "/" //where to redirect upon failed auth.
+            RedirectUrl = "/login?err=You weren't authorised for that page." //where to redirect upon failed auth.
         });
     }
 
