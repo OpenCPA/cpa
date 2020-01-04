@@ -3,13 +3,59 @@
 @Html.Partial("header", Model.PageName)
 <body>
     <h1>User Management</h1>
-    <p><i>Manage users' permissions, delete and create new ones.</i></p>
+    <p><i>Manage users' permissions, delete and create new ones. (<a href="/manage">back</a>)</i></p>
+    @if (Model.Error != null)
+    {
+        <p style="color: red;">@Model.Error</p>
+    }
+    @if (Model.Message != null)
+    {
+        <p style="color: mediumseagreen;">@Model.Message</p>
+    }
     <br>
-    <ul>
+    <h3 style="padding-bottom:0px;margin-bottom:0px;">Edit Existing Users</h3>
+    <table style="border-spacing: 1em; margin-top:0em;">
+        <tr>
+            <th>User</th>
+            <th>Delete?</th>
+            <th>Reset Password?</th>
+            <th>Permissions</th>
+        </tr>
         @foreach (var user in Model.Users)
         {
-            <p>@user.Username - <a href="/manage/users/deleteuser"></a></p>
+            <tr>
+                <td>@user.Username</td>
+                <td><a href="/manage/users/deleteuser?user=@user.Username">Delete</a></td>
+                <td><a href="/manage/users/resetuser?user=@user.Username">Reset Password</a></td>
+                <td>
+                    <form action="/manage/users/changeuserperms?user-@user.Username" style="display: flex; flex-flow: row wrap; align-items: center;" method="POST">
+                        <input name="Permissions" style="display:inline;" value="@user.Permissions" />
+                        <button type="submit">Edit</button>
+                    </form>
+                </td>
+            </tr>
         }
-    </ul>
+    </table>
+
+    <!-- New user form. -->
+    <h3>Create New User</h3>
+    <form action="/manage/users/createuser" method="post">
+        <p>Username:</p>
+        <input type="text" name="Username" />
+        <br />
+        <p>Password:</p>
+        <input type="password" name="Password" />
+        <br />
+        <p>Permissions <i>(comma delimited list)</i>:</p>
+        <input type="text" name="Permissions" />
+        <br />
+        <button type="submit">Go</button>
+    </form>
+
+    <br />
+    @{
+        var year = DateTime.Now.Year.ToString();
+    }
+    <p><i>OpenCPA, @Model.Version (c) @year</i></p>
 </body>
 </html>

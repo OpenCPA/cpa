@@ -26,6 +26,7 @@ namespace OpenCPA
             {
                 //Is there an error to display?
                 string err = this.Request.Query.err;
+                if (err != null && err.Contains("?")) { err = err.Split('?')[0]; }
 
                 //Pass in and render.
                 return View["login", new LoginModel(err)];

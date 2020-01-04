@@ -257,7 +257,7 @@
     <Compile Include="Data\Track.cs" />
     <Compile Include="Models\LoginDetails.cs" />
     <Compile Include="Models\LoginModel.cs" />
-    <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Modules\ManagementModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Models\ManageModels.cs" />
     <Compile Include="Security\User.cs" />

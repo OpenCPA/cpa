@@ -47,5 +47,11 @@ namespace OpenCPA.Data
         /// </summary>
         [Option(DefaultValue = 24)]
         int LoginTime { get; }
+
+        /// <summary>
+        /// The length of the password given to a user when their account password is reset.
+        /// </summary>
+        [Option(DefaultValue = 15)]
+        int PasswordResetLength { get; }
     }
 }
