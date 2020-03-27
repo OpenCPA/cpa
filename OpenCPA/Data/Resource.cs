@@ -34,9 +34,7 @@ namespace OpenCPA.Data
     /// </summary>
     public enum ResourceType
     {
-        PNG,
-        JPG,
-        MP3,
-        M4A
+        IMAGE,
+        AUDIO
     }
 }

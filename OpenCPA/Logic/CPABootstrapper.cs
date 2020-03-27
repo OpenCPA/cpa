@@ -2,8 +2,11 @@
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
+using OpenCPA;
 using OpenCPA.Data;
 using OpenCPA.Database;
+using System;
+using System.IO;
 
 public class CPABootstrapper : DefaultNancyBootstrapper
 {
@@ -12,9 +15,10 @@ public class CPABootstrapper : DefaultNancyBootstrapper
     /// </summary>
     protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
     {
-        //Initialize the database and settings.
+        //Initialize the database, resources and settings.
         DBMan.Initialize();
-
+        ResourceMan.Initialize();
+        
         //Enable authentication for all modules.
         FormsAuthentication.Enable(pipelines, new FormsAuthenticationConfiguration()
         {
@@ -22,6 +26,4 @@ public class CPABootstrapper : DefaultNancyBootstrapper
             RedirectUrl = "/login?err=You weren't authorised for that page." //where to redirect upon failed auth.
         });
     }
-
-
 }

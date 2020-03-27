@@ -48,4 +48,58 @@ namespace OpenCPA.Models
             Message = msg;
         }
     }
+
+    /// <summary>
+    /// Used to access a password reset page in OCPA.
+    /// </summary>
+    public class UserResetModel : ManageModel
+    {
+        public new string PageName { get; set; } = "Password Reset!";
+        public string Password { get; set; }
+        public UserResetModel(string newPass)
+        {
+            Password = newPass;
+        }
+    }
+
+    /// <summary>
+    /// Model for viewing the "Manage Artists" page.
+    /// </summary>
+    public class ManageArtistsModel : ManageModel
+    {
+        public new string PageName { get; set; } = "Manage Artists";
+
+        /// <summary>
+        /// The error that has been sent to this page.
+        /// </summary>
+        public string Error { get; set; } = null;
+
+        /// <summary>
+        /// The status message that has been passed to this page.
+        /// </summary>
+        public string Message { get; set; } = null;
+
+        /// <summary>
+        /// The list of artists to manage.
+        /// </summary>
+        public List<Artist> Artists { get; set; } = new List<Artist>();
+
+        public ManageArtistsModel(string err, string msg, List<Artist> artists)
+        {
+            Error = err;
+            Artists = artists;
+            Message = msg;
+        }
+    }
+
+    /// <summary>
+    /// Model for creating an artist.
+    /// </summary>
+    public class ArtistCreateModel
+    {
+        public string EnglishName { get; set; }
+        public string NativeName { get; set; }
+        public string ProfilePictureLink { get; set; }
+        public string Description { get; set; }
+    }
 }

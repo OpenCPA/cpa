@@ -29,9 +29,9 @@ namespace OpenCPA.Data
         public string NativeName { get; set; }
 
         /// <summary>
-        /// The amount of tracks from this artist that have been archived.
+        /// Description of this artist.
         /// </summary>
-        public int TracksArchived { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// The GUID of the profile picture resource for this artist.

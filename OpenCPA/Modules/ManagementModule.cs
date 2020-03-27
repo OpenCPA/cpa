@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Web;
 using Nancy;
 using Nancy.Security;
+using Nancy.ModelBinding;
 using OpenCPA.Data;
 using OpenCPA.Database;
 using OpenCPA.Models;
@@ -66,9 +67,56 @@ namespace OpenCPA.Modules
                 string newPassword = Hash.GetCryptoSecureString(DBMan.Settings.PasswordResetLength);
                 thisUser.HashedPassword = Hash.Create(newPassword, DBMan.Settings.PasswordHashStrength);
 
-                //Update user.
+                //Update user. Redirect to page displaying new login details.
                 DBMan.Instance.Update(thisUser);
-                return Response.AsRedirect("/manage/users?msg=Password successfully reset."); //todo: email pword to admin address
+                return View["/manage/user_reset", new UserResetModel(newPassword)];
+            });
+
+            //Create a new user.
+            //...
+
+            /////////////////////////
+            /// ARTIST MANAGEMENT ///
+            /////////////////////////
+
+            Get("/artists", (req) =>
+            {
+                //Get all artists from the database.
+                var artists = DBMan.Instance.Query<Artist>("SELECT * FROM Artists");
+                var msg = Request.Query.msg;
+                return View["manage_artists", new ManageArtistsModel(this.Request.Query.err, msg, artists)];
+            });
+
+            //Creating an artist with POST.
+            Post("/artists/create", (req) =>
+            {
+                //Bind to artist creation model.
+                var artistCreate = this.Bind<ArtistCreateModel>();
+
+                //Is the profile URL link valid?
+                if (!artistCreate.ProfilePictureLink.EndsWith(".png") && !artistCreate.ProfilePictureLink.EndsWith(".jpg"))
+                {
+                    return Response.AsRedirect("/manage/artists?err=Profile picture must be a PNG or JPG file.");
+                }
+
+                //Download the resource.
+                string guid = ResourceMan.DownloadResourceFromURL(artistCreate.ProfilePictureLink, ResourceType.IMAGE);
+                if (guid == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=Invalid profile picture link, please try again.");
+                }
+
+                //Create the artist.
+                var thisArtist = new Artist()
+                {
+                    ProfileGUID = guid,
+                    EnglishName = artistCreate.EnglishName,
+                    NativeName = artistCreate.NativeName,
+                    Description = artistCreate.Description
+                };
+                DBMan.Instance.Insert(thisArtist);
+
+                return Response.AsRedirect("/manage/artists?msg=Successfully created artist '" + thisArtist.EnglishName + "'.");
             });
         }
     }
