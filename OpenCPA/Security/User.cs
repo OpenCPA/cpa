@@ -21,6 +21,7 @@ namespace OpenCPA.Data
         /// <summary>
         /// Table unique ID of this user.
         /// </summary>
+        [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
 
         /// <summary>
@@ -63,9 +64,12 @@ namespace OpenCPA.Data
 
             //Yes, create a claims principal from that.
             var identity = new GenericIdentity(user.Username);
-            foreach (var perm in user.Permissions.Split(','))
+            if (user.Permissions != null && user.Permissions != "")
             {
-                identity.AddClaim(new Claim(perm, ""));
+                foreach (var perm in user.Permissions.Split(','))
+                {
+                    identity.AddClaim(new Claim(perm, ""));
+                }
             }
 
             //Return.

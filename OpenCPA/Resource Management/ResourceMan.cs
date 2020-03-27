@@ -71,6 +71,7 @@ namespace OpenCPA
         /// </summary>
         public static string GetResourceFilePath(string guid, ResourceType type)
         {
+            if (guid == "" || guid == null) { return null; }
             switch (type)
             {
                 case ResourceType.AUDIO:
@@ -89,6 +90,9 @@ namespace OpenCPA
         /// </summary>
         public static bool DeleteResource(string guid)
         {
+            //Ignore invalid GUIDs.
+            if (guid == null || guid == "") { return true; }
+
             //Get the database entry, delete from file record.
             var res = DBMan.Instance.Query<Resource>("SELECT * FROM Resources WHERE GUID=?", guid);
             if (res.Count == 0)

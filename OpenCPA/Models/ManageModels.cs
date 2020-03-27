@@ -63,6 +63,16 @@ namespace OpenCPA.Models
     }
 
     /// <summary>
+    /// Bindings for creating a user.
+    /// </summary>
+    public class UserCreateModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Permissions { get; set; }
+    }
+
+    /// <summary>
     /// Model for viewing the "Manage Artists" page.
     /// </summary>
     public class ManageArtistsModel : ManageModel

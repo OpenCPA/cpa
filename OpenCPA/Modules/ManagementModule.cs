@@ -60,7 +60,7 @@ namespace OpenCPA.Modules
                 string username = user.Value;
 
                 //Get the user from database, edit and update.
-                User thisUser = DBMan.Instance.FindWithQuery<User>("DELETE FROM Users WHERE Username=?", username);
+                User thisUser = DBMan.Instance.FindWithQuery<User>("SELECT * FROM Users WHERE Username=?", username);
                 if (thisUser == null) { return Response.AsRedirect("/manage/users?err=That user does not exist."); }
 
                 //Generate a cryptographically secure random string.
@@ -69,11 +69,32 @@ namespace OpenCPA.Modules
 
                 //Update user. Redirect to page displaying new login details.
                 DBMan.Instance.Update(thisUser);
-                return View["/manage/user_reset", new UserResetModel(newPassword)];
+                return View["manage_user_reset", new UserResetModel(newPassword)];
             });
 
             //Create a new user.
-            //...
+            Post("/users/createuser", (req) =>
+            {
+                //Bind to user create model.
+                var model = this.Bind<UserCreateModel>();
+
+                //Check the username isn't a dupe.
+                if (DBMan.Instance.FindWithQuery<User>("SELECT * FROM Users WHERE Username=?", model.Username) != null)
+                {
+                    return Response.AsRedirect("/manage/users?err=A user already exists with username'" + model.Username + "'.");
+                }
+
+                //Create the user.
+                DBMan.Instance.Insert(new User()
+                {
+                    GUID = Guid.NewGuid().ToString(),
+                    Username = model.Username,
+                    HashedPassword = Hash.Create(model.Password, DBMan.Settings.PasswordHashStrength),
+                    Permissions = model.Permissions
+                });
+
+                return Response.AsRedirect("/manage/users?msg=Successfully created user.");
+            });
 
             /////////////////////////
             /// ARTIST MANAGEMENT ///
@@ -93,11 +114,15 @@ namespace OpenCPA.Modules
                 //Bind to artist creation model.
                 var artistCreate = this.Bind<ArtistCreateModel>();
 
-                //Download the resource. This is for administrators only, don't verify file extension.
-                string guid = ResourceMan.DownloadResourceFromURL(artistCreate.ProfilePictureLink, ResourceType.IMAGE);
-                if (guid == null)
+                //If a profile pic is specified, download the resource. This is for administrators only, don't verify file extension.
+                string guid = "";
+                if (artistCreate.ProfilePictureLink != null && artistCreate.ProfilePictureLink != "")
                 {
-                    return Response.AsRedirect("/manage/artists?err=Invalid profile picture link, please try again.");
+                    guid = ResourceMan.DownloadResourceFromURL(artistCreate.ProfilePictureLink, ResourceType.IMAGE);
+                    if (guid == null)
+                    {
+                        return Response.AsRedirect("/manage/artists?err=Invalid profile picture link, please try again.");
+                    }
                 }
 
                 //Create the artist.
@@ -175,6 +200,30 @@ namespace OpenCPA.Modules
                 //Update the artist, redirect.
                 DBMan.Instance.Update(artist);
                 return Response.AsRedirect("/manage/artists?msg=Successfully edited artist.");
+            });
+
+            //Deleting an artist.
+            Get("/artists/delete", (req) =>
+            {
+                //Is an ID provided?
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=Invalid artist ID provided.");
+                }
+
+                //Attempt to get that artist from the database.
+                Artist artist = DBMan.Instance.FindWithQuery<Artist>("SELECT * FROM Artists WHERE ID=?", Request.Query.id.ToString());
+                if (artist == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=Invalid artist ID provided.");
+                }
+
+                //Delete all resources associated with the artist.
+                ResourceMan.DeleteResource(artist.ProfileGUID);
+
+                //Delete that artist, return success.
+                DBMan.Instance.Delete(artist);
+                return Response.AsRedirect("/manage/artists?msg=Successfully deleted artist.");
             });
         }
     }
