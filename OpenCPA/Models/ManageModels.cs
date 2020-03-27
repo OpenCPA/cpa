@@ -125,4 +125,59 @@ namespace OpenCPA.Models
             Artist = a;
         }
     }
+
+    /// <summary>
+    /// Model for viewing the "Manage Artists" page.
+    /// </summary>
+    public class ManageAlbumsModel : ManageModel
+    {
+        public new string PageName { get; set; } = "Manage Albums";
+
+        /// <summary>
+        /// The error that has been sent to this page.
+        /// </summary>
+        public string Error { get; set; } = null;
+
+        /// <summary>
+        /// The status message that has been passed to this page.
+        /// </summary>
+        public string Message { get; set; } = null;
+
+        public int LastPage { get; set; }
+        public int NextPage { get; set; }
+
+        /// <summary>
+        /// The list of artists to manage.
+        /// </summary>
+        public List<Album> Albums = new List<Album>();
+
+        public ManageAlbumsModel(string err, string msg, List<Album> albums, int lastPage, int nextPage)
+        {
+            Error = err;
+            Albums = albums;
+            Message = msg;
+            LastPage = lastPage;
+            NextPage = nextPage;
+        }
+    }
+
+    /// <summary>
+    /// Model for POST data searching the albums page.
+    /// </summary>
+    public class AlbumSearchModel
+    {
+        public string SearchTerm { get; set; }
+    }
+
+    /// <summary>
+    /// Bind model for creating a new album.
+    /// </summary>
+    public class AlbumCreateModel
+    { 
+        public string EnglishName { get; set; }
+        public string NativeName { get; set; }
+        public string AlbumArtLink { get; set; }
+        public int ReleaseYear { get; set; }
+        public int Artist { get; set; }
+    }
 }

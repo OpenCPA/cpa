@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+<body>
+    <h1>Album Management</h1>
+    <p><i>Manage existing albums, create and delete others. (<a href="/manage">back</a>)</i></p>
+    @if (Model.Error != null)
+    {
+        <p style="color: red;">@Model.Error</p>
+    }
+    @if (Model.Message != null)
+    {
+        <p style="color: mediumseagreen;">@Model.Message</p>
+    }
+    <br>
+    <h3 style="padding-bottom:0px;margin-bottom:0px;">Edit Existing Albums</h3>
+    <form action="/manage/albums" style="display: flex; flex-flow: row wrap; align-items: center;" method="POST">
+        <input name="SearchTerm" style="display:inline;" />
+        <button type="submit">Search</button>
+    </form>
+    <table style="border-spacing: 1em; margin-top:0em;">
+        <tr>
+            <th>English Name</th>
+            <th>Native Name</th>
+            <th>Artist ID</th>
+            <th>Release Year</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var album in Model.Albums)
+        {
+            <tr>
+                <td>@album.EnglishName</td>
+
+                <!-- De-entify HTML garbage here. -->
+                <td>@OpenCPA.ViewExtensions.EntityToUnicode(album.NativeName)</td>
+                <td>@album.ArtistID</td>
+                <td>@album.ReleaseYear</td>
+                <td><a href="/manage/albums/edit?id=@album.ID">Edit</a></td>
+                <td><a href="/manage/albums/delete?id=@album.ID">Delete</a></td>
+            </tr>
+        }
+    </table>
+    <p><a href="/manage/albums?page=@Model.LastPage">last page</a> - <a href="/manage/albums?page=@Model.NextPage">next page</a></p>
+
+    <!-- New artist form. -->
+    <h3>Create New Album</h3>
+    <form action="/manage/albums/create" method="post">
+        <p>English Name:</p>
+        <input type="text" name="EnglishName" />
+        <br />
+        <p>Native Name:</p>
+        <input type="text" name="NativeName" />
+        <br />
+        <p>Artist <i>(must be a valid artist ID, not a name)</i>:</p>
+        <input type="number" name="Artist" />
+        <br />
+        <p>Release Year:</p>
+        <input type="number" name="ReleaseYear"/>
+        <br />
+        <p>Album Art <i>(must be a publicly accessible image)</i></p>
+        <br />
+        <input type="text" name="AlbumArtLink" />
+        <br />
+        <button type="submit">Go</button>
+    </form>
+
+    <br />
+    @{
+        var year = DateTime.Now.Year.ToString();
+    }
+    <p><i>OpenCPA, @Model.Version (c) @year</i></p>
+</body>
+</html>

@@ -53,5 +53,11 @@ namespace OpenCPA.Data
         /// </summary>
         [Option(DefaultValue = 15)]
         int PasswordResetLength { get; }
+
+        /// <summary>
+        /// The amount of albums to display per page in the management console and on site search.
+        /// </summary>
+        [Option(DefaultValue = 2)]
+        int AlbumsPerPage { get; }
     }
 }

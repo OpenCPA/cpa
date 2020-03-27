@@ -225,6 +225,92 @@ namespace OpenCPA.Modules
                 DBMan.Instance.Delete(artist);
                 return Response.AsRedirect("/manage/artists?msg=Successfully deleted artist.");
             });
+
+            ////////////////////////
+            /// ALBUM MANAGEMENT ///
+            ////////////////////////
+
+            Get("/albums", (req) =>
+            {
+                //Get the page number to be accessed.
+                int pageNum = 1;
+                int albumsPerPage = DBMan.Settings.AlbumsPerPage;
+                if (Request.Query.page != null)
+                {
+                    try
+                    {
+                        pageNum = int.Parse(Request.Query.page.ToString());
+                    }
+                    catch { }
+                }
+                if (pageNum < 1) { pageNum = 1; }
+
+                //How many records are there? Valid page?
+                int records = DBMan.Instance.Query<Album>("SELECT ID FROM Albums").Count;
+                int recordsIn = (pageNum - 1) * albumsPerPage;
+                if (recordsIn > records)
+                {
+                    //Not a valid page. Redirect to the very last page.
+                    pageNum = records / albumsPerPage + 1;
+                    return Response.AsRedirect("/manage/albums?page=" + pageNum);
+                }
+
+                //Get the albums for the page.
+                var albums = DBMan.Instance.Query<Album>("SELECT * FROM Albums LIMIT ? OFFSET ?", albumsPerPage, recordsIn);
+
+                //Get the albums to be displayed.
+                int thisPage = recordsIn / albumsPerPage + 1;
+                int lastPage = (thisPage - 1 < 1) ? 1 : thisPage - 1;
+                int nextPage = (thisPage + 1 > records / albumsPerPage + 1) ? records / albumsPerPage + 1 : thisPage + 1;
+                return View["manage_albums", new ManageAlbumsModel(Request.Query.err, Request.Query.msg, albums, lastPage, nextPage)];
+            });
+            Post("/albums", (req) =>
+            {
+                //SEARCH TERM
+                //Bind model.
+                var model = this.Bind<AlbumSearchModel>();
+
+                //Posting for a search term.
+                var albums = DBMan.Instance.Query<Album>("SELECT * FROM Albums WHERE EnglishName LIKE ?", model.SearchTerm);
+                return View["manage_albums", new ManageAlbumsModel(Request.Query.err, Request.Query.msg, albums, 1, 1)];
+            });
+
+            //Creating an album.
+            Post("/albums/create", (req) =>
+            {
+                //Bind the model data out.
+                var model = this.Bind<AlbumCreateModel>();
+
+                //Check the artist ID is valid.
+                if (DBMan.Instance.Query<Artist>("SELECT ID FROM Artists WHERE ID=?", model.Artist).Count == 0)
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid artist ID given.");
+                }
+
+                //Attempt to download the profile resource (if provided).
+                string guid = "";
+                if (model.AlbumArtLink != null && model.AlbumArtLink != "")
+                {
+                    guid = ResourceMan.DownloadResourceFromURL(model.AlbumArtLink, ResourceType.IMAGE);
+                    if (guid == null)
+                    {
+                        return Response.AsRedirect("/manage/albums?err=Invalid profile picture link, please try again.");
+                    }
+                }
+
+                //Create the album.
+                DBMan.Instance.Insert(new Album()
+                {
+                    AlbumArtGUID = guid,
+                    Artist = model.Artist,
+                    EnglishName = model.EnglishName,
+                    NativeName = model.NativeName,
+                    ReleaseYear = model.ReleaseYear,
+                    Tracks = ""
+                });
+
+                return null;
+            });
         }
     }
 }

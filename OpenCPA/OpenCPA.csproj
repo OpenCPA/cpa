@@ -305,6 +305,7 @@
     <Content Include="Views\manage_artists.cshtml" />
     <Content Include="Views\manage_user_reset.cshtml" />
     <Content Include="Views\manage_artists_edit.cshtml" />
+    <Content Include="Views\manage_albums.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
