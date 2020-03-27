@@ -102,4 +102,17 @@ namespace OpenCPA.Models
         public string ProfilePictureLink { get; set; }
         public string Description { get; set; }
     }
+
+    /// <summary>
+    /// Model for editing a single artist.
+    /// </summary>
+    public class EditArtistModel : ManageModel
+    {
+        public new string PageName { get; set; } = "Edit Artist";
+        public Artist Artist { get; set; }
+        public EditArtistModel(Artist a)
+        {
+            Artist = a;
+        }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using OpenCPA.Data;
+﻿using Nancy;
+using OpenCPA.Data;
 using OpenCPA.Database;
 using System;
 using System.Collections.Generic;
@@ -65,8 +66,10 @@ namespace OpenCPA
             return guid;
         }
 
-        //Gets the file path of any given resource with GUID, given its type.
-        private static string GetResourceFilePath(string guid, ResourceType type)
+        /// <summary>
+        /// Gets the file path of any given resource with GUID, given its type.
+        /// </summary>
+        public static string GetResourceFilePath(string guid, ResourceType type)
         {
             switch (type)
             {

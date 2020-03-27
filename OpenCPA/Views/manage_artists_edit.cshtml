@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+<body>
+    <h1>Edit @Model.Artist.EnglishName</h1>
+    <form action="/manage/artists/edit?id=@Model.Artist.ID" method="post">
+        <p>English Name:</p>
+        <input type="text" name="EnglishName" value="@Model.Artist.EnglishName"/>
+        <br />
+        <p>Native Name:</p>
+        <input type="text" name="NativeName" value="@OpenCPA.ViewExtensions.EntityToUnicode(Model.Artist.NativeName)"/>
+        <br />
+        <p>Profile Picture Link <i>(must be an image)</i>:</p>
+        <input type="text" name="ProfilePictureLink" value=""/>
+        <br />
+        <p>Description:</p>
+        <textarea name="Description">@Model.Artist.Description</textarea>
+        <br />
+        <button type="submit">Go</button>
+    </form>
+</body>
+</html>

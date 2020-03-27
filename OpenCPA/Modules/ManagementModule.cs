@@ -93,13 +93,7 @@ namespace OpenCPA.Modules
                 //Bind to artist creation model.
                 var artistCreate = this.Bind<ArtistCreateModel>();
 
-                //Is the profile URL link valid?
-                if (!artistCreate.ProfilePictureLink.EndsWith(".png") && !artistCreate.ProfilePictureLink.EndsWith(".jpg"))
-                {
-                    return Response.AsRedirect("/manage/artists?err=Profile picture must be a PNG or JPG file.");
-                }
-
-                //Download the resource.
+                //Download the resource. This is for administrators only, don't verify file extension.
                 string guid = ResourceMan.DownloadResourceFromURL(artistCreate.ProfilePictureLink, ResourceType.IMAGE);
                 if (guid == null)
                 {
@@ -117,6 +111,70 @@ namespace OpenCPA.Modules
                 DBMan.Instance.Insert(thisArtist);
 
                 return Response.AsRedirect("/manage/artists?msg=Successfully created artist '" + thisArtist.EnglishName + "'.");
+            });
+
+            //Artist editing (GET).
+            Get("/artists/edit", (req) =>
+            {
+                //Is there an ID?
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=Invalid artist ID to edit.");
+                }
+                int id = Request.Query.id;
+
+                //Get the artist with that ID from the DB.
+                Artist artist = DBMan.Instance.FindWithQuery<Artist>("SELECT * FROM Artists WHERE ID=?", id);
+                if (artist == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=No artist exists with ID '" + id + "'.");
+                }
+
+                //Open the edit page.
+                return View["manage_artists_edit", new EditArtistModel(artist)];
+            });
+            Post("/artists/edit", (req) =>
+            {
+                //Bind the model.
+                var data = this.Bind<ArtistCreateModel>();
+
+                //Get the ID out.
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=Invalid artist ID to edit.");
+                }
+                int id = Request.Query.id;
+
+                //Get the artist with that ID from the DB.
+                Artist artist = DBMan.Instance.FindWithQuery<Artist>("SELECT * FROM Artists WHERE ID=?", id);
+                if (artist == null)
+                {
+                    return Response.AsRedirect("/manage/artists?err=No artist exists with ID '" + id + "'.");
+                }
+
+                //Edit the fields as necessary.
+                artist.EnglishName = data.EnglishName;
+                artist.Description = data.Description;
+                artist.NativeName = data.NativeName;
+
+                //If the profile picture is different, download the new resource and delete the old one.
+                if (data.ProfilePictureLink != null && data.ProfilePictureLink != "")
+                {
+                    string guid = ResourceMan.DownloadResourceFromURL(data.ProfilePictureLink, ResourceType.IMAGE);
+                    if (guid != null)
+                    {
+                        ResourceMan.DeleteResource(artist.ProfileGUID);
+                        artist.ProfileGUID = guid;
+                    }
+                    else
+                    {
+                        return Response.AsRedirect("/manage/artists?err=Invalid profile picture given. Please try again.");
+                    }
+                }
+
+                //Update the artist, redirect.
+                DBMan.Instance.Update(artist);
+                return Response.AsRedirect("/manage/artists?msg=Successfully edited artist.");
             });
         }
     }

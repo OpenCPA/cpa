@@ -25,7 +25,9 @@
         {
             <tr>
                 <td>@artist.EnglishName</td>
-                <td>@artist.NativeName</td>
+
+                <!-- De-entify HTML garbage here. -->
+                <td>@OpenCPA.ViewExtensions.EntityToUnicode(artist.NativeName)</td>
                 <td><a href="/manage/artists/edit?id=@artist.ID">Edit</a></td>
                 <td><a href="/manage/artists/delete?id=@artist.ID">Delete</a></td>
             </tr>
@@ -45,7 +47,7 @@
         <input type="text" name="ProfilePictureLink" />
         <br />
         <p>Description:</p>
-        <textarea name="Description"/>
+        <textarea name="Description"></textarea>
         <br />
         <button type="submit">Go</button>
     </form>

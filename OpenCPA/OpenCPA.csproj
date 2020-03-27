@@ -265,6 +265,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logic\HelperExtensions.cs" />
+    <Compile Include="Logic\MIME.cs" />
     <Compile Include="Models\CPAModel.cs" />
     <Compile Include="Data\Album.cs" />
     <Compile Include="Data\Artist.cs" />
@@ -278,6 +280,7 @@
     <Compile Include="Modules\ManagementModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Models\ManageModels.cs" />
+    <Compile Include="Modules\ResourcesModule.cs" />
     <Compile Include="Resource Management\ResourceMan.cs" />
     <Compile Include="Security\User.cs" />
     <Compile Include="Logic\CPABootstrapper.cs" />
@@ -301,6 +304,7 @@
     <Content Include="Views\manage_users.cshtml" />
     <Content Include="Views\manage_artists.cshtml" />
     <Content Include="Views\manage_user_reset.cshtml" />
+    <Content Include="Views\manage_artists_edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
