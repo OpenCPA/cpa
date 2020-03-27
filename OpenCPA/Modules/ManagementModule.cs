@@ -309,8 +309,11 @@ namespace OpenCPA.Modules
                     Tracks = ""
                 });
 
-                return null;
+                return Response.AsRedirect("/manage/albums?msg=Successfully created album.");
             });
+
+            //Deleting an album.
+            //...
         }
     }
 }
