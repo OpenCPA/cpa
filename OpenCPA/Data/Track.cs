@@ -34,19 +34,9 @@ namespace OpenCPA.Data
         public int Length { get; set; }
 
         /// <summary>
-        /// The ID of the artist that created this track.
-        /// </summary>
-        public int Artist { get; set; }
-
-        /// <summary>
-        /// Comma delimited IDs of the album(s) this track originates from.
+        /// Comma delimited IDs of the album this track originates from.
         /// </summary>
         public int Album { get; set; }
-
-        /// <summary>
-        /// The original (first release) release year of this track.
-        /// </summary>
-        public int ReleaseYear { get; set; }
 
         /// <summary>
         /// The GUID of the file stored on disk.

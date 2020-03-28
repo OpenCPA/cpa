@@ -180,4 +180,20 @@ namespace OpenCPA.Models
         public int ReleaseYear { get; set; }
         public int Artist { get; set; }
     }
+
+    /// <summary>
+    /// Data for loading the "Edit Album" page.
+    /// </summary>
+    public class AlbumEditModel : ManageModel
+    {
+        public List<Track> Tracks;
+        public Album Album;
+        public new string PageName { get; set; } = "Edit Album";
+
+        public AlbumEditModel(List<Track> tracks, Album album)
+        {
+            Tracks = tracks;
+            Album = album;
+        }
+    }
 }

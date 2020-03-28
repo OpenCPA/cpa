@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+<body>
+    <h1>Edit @Model.Album.EnglishName Metadata</h1>
+    <form action="/manage/albums/edit?id=@Model.Album.ID" method="post">
+        <p>English Name:</p>
+        <input type="text" name="EnglishName" value="@Model.Album.EnglishName" />
+        <br />
+        <p>Native Name:</p>
+        <input type="text" name="NativeName" value="@OpenCPA.ViewExtensions.EntityToUnicode(Model.Album.NativeName)" />
+        <br />
+        <p>Album Art Link <i>(must be an image)</i>:</p>
+        <input type="text" name="AlbumArtLink" value="" />
+        <br />
+        <p>Release Year:</p>
+        <input type="number" name="ReleaseYear" value="@Model.Album.ReleaseYear" />
+        <br />
+        <p>Artist <i>(must be a valid artist ID)</i></p>
+        <input type="number" name="Artist" value="@Model.Album.Artist" />
+        <br />
+        <button type="submit">Go</button>
+    </form>
+
+    <h1>Edit @Model.Album.EnglishName Tracks</h1>
+    <table style="border-spacing: 1em; margin-top:0em;">
+        <tr>
+            <th>Track ID</th>
+            <th>English Name</th>
+            <th>Native Name</th>
+            <th>Length</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var track in Model.Tracks)
+        {
+            <tr>
+                <th>track.ID</th>
+                <th>track.EnglishName</th>
+                <th>track.NativeName</th>
+                <th>track.Length</th>
+                <th><a href="/manage/tracks/edit?id=@track.ID">edit</a></th>
+                <th><a href="/manage/tracks/delete?id=@track.ID">delete</a></th>
+            </tr>
+        }
+    </table>
+
+    <h1>Add Track</h1>
+    <form action="/manage/tracks/add?album=@Model.Album.ID" method="post">
+        <p>English Name:</p>
+        <input type="text" name="EnglishName" />
+        <br />
+        <p>Native Name:</p>
+        <input type="text" name="NativeName" />
+        <br />
+        <p>Length:</p>
+        <input type="number" name="Length" />
+        <br />
+        <p>Audio File <i>(must be MP3, OGG or FLAC)</i>:</p>
+        <input type="file" name="File" accept="audio/mpeg, audio/ogg, audio/x-flac, audio/flac" />
+        <br />
+        <button type="submit">Go</button>
+    </form>
+    <br />
+    @{
+        var year = DateTime.Now.Year.ToString();
+    }
+    <p><i>OpenCPA, @Model.Version (c) @year</i></p>
+</body>
+</html>

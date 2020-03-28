@@ -312,8 +312,85 @@ namespace OpenCPA.Modules
                 return Response.AsRedirect("/manage/albums?msg=Successfully created album.");
             });
 
+            //Editing an album.
+            Get("/albums/edit", (req) =>
+            {
+                //Is there an ID attached?
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No ID to edit provided.");
+                }
+
+                //Try to find the album with that ID.
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", Request.Query.id.Value);
+                if (album == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid album ID to edit.");
+                }
+
+                //Loop through all tracks and add them to a list.
+                List<Track> tracks = new List<Track>();
+                if (album.Tracks != null && album.Tracks != "")
+                {
+                    string[] trackIDs = album.Tracks.Split(',');
+                    foreach (var track in trackIDs)
+                    {
+                        //Search for that ID in the DB.
+                        Track trackObj = DBMan.Instance.FindWithQuery<Track>("SELECT * FROM Tracks WHERE ID=?", track);
+                        if (trackObj == null) { continue; } //could not find
+
+                        //Add to list.
+                        tracks.Add(trackObj);
+                    }
+                }
+
+                //Load the view.
+                return View["edit_album", new AlbumEditModel(tracks, album)];
+            });
+
             //Deleting an album.
-            //...
+            Get("/albums/delete", (req) =>
+            {
+                //Is an ID supplied?
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No ID supplied for album to delete.");
+                }
+
+                //Attempt to get album by ID.
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", Request.Query.id);
+                if (album == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid album ID provided to delete.");
+                }
+
+                //Get all the track IDs out from that album, grab each and delete resources then themselves.
+                if (album.Tracks != null && album.Tracks != "")
+                {
+                    string[] trackIDs = album.Tracks.Split(',');
+                    foreach (var track in trackIDs)
+                    {
+                        //Search for that ID in the DB.
+                        Track trackObj = DBMan.Instance.FindWithQuery<Track>("SELECT * FROM Tracks WHERE ID=?", track);
+                        if (trackObj == null) { continue; } //could not find
+
+                        //Delete the file resource for this track.
+                        ResourceMan.DeleteResource(trackObj.FileGUID);
+
+                        //Delete the track.
+                        DBMan.Instance.Delete(trackObj);
+                    }
+                }
+
+                //Delete the album art.
+                ResourceMan.DeleteResource(album.AlbumArtGUID);
+
+                //Delete the album.
+                DBMan.Instance.Delete(album);
+
+                //Done!
+                return Response.AsRedirect("/manage/albums?msg=Successfully deleted album and all album tracks.");
+            });
         }
     }
 }

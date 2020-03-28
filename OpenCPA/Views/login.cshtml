@@ -7,7 +7,8 @@
     @if (Model.HasError) {
         <p style="color: red;">@Model.Error</p>
     }
-    <form action="/login" method="post">
+
+    <form action="/login?redirect=@Model.Redirect" method="post">
         <label for="Username">Username: </label>
         <input name="Username" />
         <br>

@@ -28,8 +28,11 @@ namespace OpenCPA
                 string err = this.Request.Query.err;
                 if (err != null && err.Contains("?")) { err = err.Split('?')[0]; }
 
+                //Get a redirect, if there is one.
+                string redirect = this.Request.Query.returnUrl;
+
                 //Pass in and render.
-                return View["login", new LoginModel(err)];
+                return View["login", new LoginModel(err, redirect)];
             });
 
             //API for logging in and logging out.
@@ -49,8 +52,23 @@ namespace OpenCPA
                 if (userGuid == null) { return this.Context.GetRedirect("/login?err=Invalid username or password."); }
                 Guid user = (Guid)userGuid;
 
+                //Is there a redirect?
+                string redirUrl = "/";
+                if (Request.Query.redirect != null)
+                {
+                    redirUrl = Request.Query.redirect.ToString();
+                }
+
                 //Configuring cookie expiry.
-                return this.LoginAndRedirect(user, DateTime.Now.AddHours(DBMan.Settings.LoginTime));
+                return this.LoginAndRedirect(user, DateTime.Now.AddHours(DBMan.Settings.LoginTime), redirUrl);
+            });
+
+            //User attempted to access page without authorization.
+            Get("/login/noauth", (req) =>
+            {
+                //Redirect to proper login page, fixing arguments.
+                string retUrl = Request.Query.returnUrl.ToString();
+                return Response.AsRedirect("/login?err=You were not authorized to view that page.&returnUrl=" + retUrl);
             });
         }
     }

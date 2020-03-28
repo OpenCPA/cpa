@@ -14,12 +14,19 @@ namespace OpenCPA.Models
         public string Error { get; set; } = null;
         public bool HasError { get; set; } = false;
 
-        public LoginModel(string err)
+        public string Redirect { get; set; } = "/";
+
+        public LoginModel(string err, string redirect)
         {
             Error = err;
             if (Error != null)
             {
                 HasError = true;
+            }
+
+            if (redirect != null && redirect != "")
+            {
+                Redirect = redirect;
             }
         }
     }
