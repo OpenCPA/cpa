@@ -54,7 +54,7 @@ namespace OpenCPA
 
                 //Is there a redirect?
                 string redirUrl = "/";
-                if (Request.Query.redirect != null)
+                if (Request.Query.redirect != null && Request.Query.redirect != "")
                 {
                     redirUrl = Request.Query.redirect.ToString();
                 }
