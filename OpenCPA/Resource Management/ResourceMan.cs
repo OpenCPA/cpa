@@ -113,5 +113,35 @@ namespace OpenCPA
             DBMan.Instance.Delete(res[0]);
             return true;
         }
+
+        /// <summary>
+        /// Creates a resource file from POST data.
+        /// </summary>
+        internal static string MakeResourceFromPOST(HttpFile file, ResourceType type)
+        {
+            //Get the file path.
+            string guid = Guid.NewGuid().ToString();
+            string filePath = GetResourceFilePath(guid, type);
+
+            //Create and write to the file.
+            try
+            {
+                using (var fileStream = File.Create(filePath))
+                {
+                    file.Value.Seek(0, SeekOrigin.Begin);
+                    file.Value.CopyTo(fileStream);
+                }
+            }
+            catch { return null; }
+
+            //Create the resource database side.
+            DBMan.Instance.Insert(new Resource()
+            {
+                GUID = guid,
+                Type = type
+            });
+
+            return guid;
+        }
     }
 }

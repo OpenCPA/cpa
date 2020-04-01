@@ -2,7 +2,16 @@
 <html>
 @Html.Partial("header", Model.PageName)
 <body>
-    <h1>Edit @Model.Album.EnglishName Metadata</h1>
+    <h1 style="margin-bottom:0px;">Edit @Model.Album.EnglishName Metadata</h1>
+    <p><a href="/manage/albums">back</a></p>
+    @if (Model.Error != null)
+    {
+        <p style="color: red;">@Model.Error</p>
+    }
+    @if (Model.Message != null)
+    {
+        <p style="color: mediumseagreen;">@Model.Message</p>
+    }
     <form action="/manage/albums/edit?id=@Model.Album.ID" method="post">
         <p>English Name:</p>
         <input type="text" name="EnglishName" value="@Model.Album.EnglishName" />
@@ -35,18 +44,18 @@
         @foreach (var track in Model.Tracks)
         {
             <tr>
-                <th>track.ID</th>
-                <th>track.EnglishName</th>
-                <th>track.NativeName</th>
-                <th>track.Length</th>
-                <th><a href="/manage/tracks/edit?id=@track.ID">edit</a></th>
-                <th><a href="/manage/tracks/delete?id=@track.ID">delete</a></th>
+                <td>@track.ID</td>
+                <td>@track.EnglishName</td>
+                <td>@track.NativeName</td>
+                <td>@track.Length</td>
+                <td><a href="/manage/tracks/edit?id=@track.ID">edit</a></td>
+                <td><a href="/manage/tracks/delete?id=@track.ID">delete</a></td>
             </tr>
         }
     </table>
 
     <h1>Add Track</h1>
-    <form action="/manage/tracks/add?album=@Model.Album.ID" method="post">
+    <form action="/manage/tracks/add?album=@Model.Album.ID" enctype="multipart/form-data" method="post">
         <p>English Name:</p>
         <input type="text" name="EnglishName" />
         <br />

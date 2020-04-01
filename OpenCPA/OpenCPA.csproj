@@ -266,6 +266,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binding\FileUploadBinding.cs" />
     <Compile Include="Logic\HelperExtensions.cs" />
     <Compile Include="Logic\MIME.cs" />
     <Compile Include="Models\CPAModel.cs" />

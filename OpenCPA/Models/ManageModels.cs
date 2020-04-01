@@ -1,4 +1,5 @@
-﻿using OpenCPA.Data;
+﻿using Nancy;
+using OpenCPA.Data;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -188,12 +189,34 @@ namespace OpenCPA.Models
     {
         public List<Track> Tracks;
         public Album Album;
+        /// <summary>
+        /// The error that has been sent to this page.
+        /// </summary>
+        public string Error { get; set; } = null;
+
+        /// <summary>
+        /// The status message that has been passed to this page.
+        /// </summary>
+        public string Message { get; set; } = null;
         public new string PageName { get; set; } = "Edit Album";
 
-        public AlbumEditModel(List<Track> tracks, Album album)
+        public AlbumEditModel(List<Track> tracks, Album album, string msg, string err)
         {
             Tracks = tracks;
             Album = album;
+            Error = err;
+            Message = msg;
         }
+    }
+
+    /// <summary>
+    /// Model for adding tracks to an album.
+    /// </summary>
+    public class AddTrackModel
+    {
+        public HttpFile File;
+        public string EnglishName;
+        public string NativeName;
+        public string Length;
     }
 }

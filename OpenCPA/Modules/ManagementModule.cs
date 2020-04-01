@@ -336,6 +336,12 @@ namespace OpenCPA.Modules
                     foreach (var track in trackIDs)
                     {
                         //Search for that ID in the DB.
+                        int tid;
+                        try
+                        {
+                            tid = int.Parse(track);
+                        }
+                        catch { continue; }
                         Track trackObj = DBMan.Instance.FindWithQuery<Track>("SELECT * FROM Tracks WHERE ID=?", track);
                         if (trackObj == null) { continue; } //could not find
 
@@ -345,7 +351,7 @@ namespace OpenCPA.Modules
                 }
 
                 //Load the view.
-                return View["edit_album", new AlbumEditModel(tracks, album)];
+                return View["edit_album", new AlbumEditModel(tracks, album, this.Request.Query.msg, this.Request.Query.err)];
             });
 
             //Deleting an album.
@@ -390,6 +396,168 @@ namespace OpenCPA.Modules
 
                 //Done!
                 return Response.AsRedirect("/manage/albums?msg=Successfully deleted album and all album tracks.");
+            });
+
+            //Edit an album.
+            Post("/albums/edit", (req) =>
+            {
+                var model = this.Bind<AlbumCreateModel>();
+
+                //Is there an album ID attached?
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No album ID provided to edit.");
+                }
+
+                //Get the ID out.
+                int albumID;
+                try
+                {
+                    albumID = int.Parse(Request.Query.id.ToString());
+                }
+                catch
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid album ID provided to edit.");
+                }
+
+                //Get the album out.
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", albumID);
+                if (album == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid album ID provided to edit.");
+                }
+
+                //Edit the album properties.
+                album.EnglishName = model.EnglishName;
+                album.NativeName = model.NativeName;
+                album.ReleaseYear = model.ReleaseYear;
+                
+                //Edited album art?
+                if (model.AlbumArtLink != null && model.AlbumArtLink != "")
+                {
+                    //Create the new resource.
+                    string guid = "";
+                    if (model.AlbumArtLink != null && model.AlbumArtLink != "")
+                    {
+                        guid = ResourceMan.DownloadResourceFromURL(model.AlbumArtLink, ResourceType.IMAGE);
+                        if (guid == null)
+                        {
+                            return Response.AsRedirect("/manage/albums?err=Invalid profile picture link, please try again.");
+                        }
+                    }
+
+                    //Delete the old one, set album art URL.
+                    ResourceMan.DeleteResource(album.AlbumArtGUID);
+                    album.AlbumArtGUID = guid;
+                }
+
+                //Update the album. Success!
+                DBMan.Instance.Update(album);
+                return Response.AsRedirect("/manage/albums/edit?id=" + albumID + "&msg=Successfully updated album.");
+            });
+
+            ////////////////////////
+            /// TRACK MANAGEMENT ///
+            ////////////////////////
+
+            //Adding a track to an album.
+            Post("/tracks/add", (req) =>
+            {
+                //Bind POST data.
+                var model = this.Bind<AddTrackModel>();
+                if (model.File == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No file provided for this track.");
+                }
+
+                //Get the album ID from the query.
+                if (Request.Query.album == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No album supplied to add the track to.");
+                }
+
+                //Get the album out.
+                string albumId = Request.Query.album.Value;
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", albumId);
+                if (album == null)
+                {
+                    return Response.AsRedirect("/manage/albums/edit?id=" + albumId + "&err=Invalid album ID given to add track to.");
+                }
+
+                //Parse length.
+                int trackLength;
+                try
+                {
+                    trackLength = int.Parse(model.Length);
+                }
+                catch
+                {
+                    return Response.AsRedirect("/manage/albums/edit?id=" + albumId + "&err=Invalid track length.");
+                }
+
+                //Create the track from the uploaded file.
+                string guid = ResourceMan.MakeResourceFromPOST(model.File, ResourceType.AUDIO);
+                if (guid == null)
+                {
+                    return Response.AsRedirect("/manage/albums/edit?id=" + albumId + "&err=Invalid track file uploaded. Please try again.");
+                }
+
+                //Create the track.
+                Track track = new Track()
+                {
+                    FileGUID = guid,
+                    Album = album.ID,
+                    EnglishName = model.EnglishName,
+                    NativeName = model.NativeName,
+                    Length = trackLength
+                };
+                DBMan.Instance.Insert(track);
+
+                //Add track ID to the list of tracks.
+                List<string> tracks = (album.Tracks == null || album.Tracks == "") ? new List<string>() : album.Tracks.Split(',').ToList();
+                tracks.RemoveAll(x => x == "");
+                tracks.Add(track.ID.ToString());
+                
+                //Update the album.
+                album.Tracks = string.Join(",", tracks).Trim(',');
+                DBMan.Instance.Update(album);
+
+                //Success!
+                return Response.AsRedirect("/manage/albums/edit?id=" + albumId + "&msg=Successfully added track to album.");
+            });
+
+            //Delete a track.
+            Get("/tracks/delete", (req) =>
+            {
+                //Get the ID to delete.
+                if (Request.Query.id == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=No track ID given to delete.");
+                }
+
+                //Get the track to delete.
+                Track track = DBMan.Instance.FindWithQuery<Track>("SELECT * FROM Tracks WHERE ID=?", Request.Query.id.ToString());
+                if (track == null)
+                {
+                    return Response.AsRedirect("/manage/albums?err=Invalid track ID supplied.");
+                }
+
+                //Get the album, remove the track from the track list.
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", track.Album);
+                if (album != null)
+                {
+                    List<string> tracks = (album.Tracks == null || album.Tracks == "") ? new List<string>() : album.Tracks.Split(',').ToList();
+                    tracks.RemoveAll(x => x == track.ID.ToString());
+                    album.Tracks = string.Join(",", tracks).Trim(',');
+                    DBMan.Instance.Update(album);
+                }
+
+                //Delete the resource for the track.
+                ResourceMan.DeleteResource(track.FileGUID);
+
+                //Delete the track.
+                DBMan.Instance.Delete(track);
+                return Response.AsRedirect("/manage/albums/edit?id=" + album.ID + "&msg=Successfully deleted track.");
             });
         }
     }
