@@ -59,5 +59,11 @@ namespace OpenCPA.Data
         /// </summary>
         [Option(DefaultValue = 2)]
         int AlbumsPerPage { get; }
+
+        /// <summary>
+        /// The alert shown on the homepage of the site.
+        /// </summary>
+        [Option(DefaultValue = null)]
+        string MainPageAlert { get; }
     }
 }

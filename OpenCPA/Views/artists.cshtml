@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+
+<body>
+    @Html.Partial("nav")
+    <br />
+    <div class="container">
+        <h1>Browse Artists</h1>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="/artists?sort=a">A</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=b">B</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=c">C</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=d">D</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=e">E</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=f">F</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=g">G</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=h">H</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=i">I</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=j">J</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=k">K</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=l">L</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=m">M</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=n">N</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=o">O</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=p">P</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=q">Q</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=r">R</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=s">S</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=t">T</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=u">U</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=v">V</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=w">W</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=x">X</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=y">Y</a></li>
+                <li class="page-item"><a class="page-link" href="/artists?sort=z">Z</a></li>
+            </ul>
+        </nav>
+
+        <!-- Table of albums. -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">English Name</th>
+                    <th scope="col">Native Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var artist in Model.Artists)
+                {
+                    <tr>
+                        <th scope="row">@artist.ID</th>
+                        <td><a href="/artists/view?id=@artist.ID">@artist.EnglishName</a></td>
+                        <td>@artist.NativeName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (Model.Artists.Count == 0)
+        {
+            <p>No results found.</p>
+        }
+    </div>
+</body>
+</html>

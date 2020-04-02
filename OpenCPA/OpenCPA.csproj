@@ -261,6 +261,8 @@
     <Content Include="StaticAssets\index.css" />
     <Content Include="Views\edit_album.cshtml" />
     <Content Include="StaticAssets\login.less" />
+    <Content Include="Views\albums.cshtml" />
+    <Content Include="Views\artists.cshtml" />
     <None Include="Views\header.cshtml" />
     <None Include="Views\index.cshtml" />
     <None Include="Views\login.cshtml" />
@@ -271,6 +273,8 @@
     <Compile Include="Binding\FileUploadBinding.cs" />
     <Compile Include="Logic\HelperExtensions.cs" />
     <Compile Include="Logic\MIME.cs" />
+    <Compile Include="Models\ArtistsModel.cs" />
+    <Compile Include="Models\AlbumsModel.cs" />
     <Compile Include="Models\CPAModel.cs" />
     <Compile Include="Data\Album.cs" />
     <Compile Include="Data\Artist.cs" />

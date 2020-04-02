@@ -3,6 +3,15 @@
 <body style="align-content: center; text-align: center">
     <link rel="stylesheet" href="/assets/index.css" />
     @Html.Partial("nav")
+    @if (Model.Alert != null)
+    {
+    <div class="alert alert-info" role="alert">
+        @Model.Alert
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    }
     <div class="jumbotron white-text">
         <img src="/assets/logo_outline.png" style="height:15%; width:40%;" />
         <p class="lead">The open source City Pop archive. Legal requests to <i>legal@opencpa.org</i>.</p>
@@ -19,7 +28,7 @@
                     <img class="card-img-top" src="/assets/preservingdata.png" alt="">
                     <div class="card-body">
                         <h5 class="card-title">Preserving Information</h5>
-                        <p class="card-text">This archive serves as a store for preserving easily readable English information on the greatest Japanese artists of the 70s and 80s.</p>
+                        <p class="card-text">We're an index for preserving easily readable English information on the greatest Japanese artists of the 70s and 80s.</p>
                         <a href="#" class="btn btn-primary">View Artists</a>
                     </div>
                 </div>
@@ -62,32 +71,24 @@
     <div class="mt-5 pt-5 pb-5 footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5 col-xs-12 about-company">
+                <div class="col-sm about-company">
                     <h3>Thanks for coming!</h3>
-                    <p class="pr-5 text-white-50">You can access more information about this site's backend on the Github repository at the links on the right. You can also contribute by submitting a pull request.</p>
-                    <p><a href="#"><i class="fa fa-facebook-square mr-1"></i></a><a href="#"><i class="fa fa-linkedin-square"></i></a></p>
+                    <p class="text-white-50">You can access more information about this site's backend on the Github repository at the links on the right. You can also contribute by submitting a pull request.</p>
                 </div>
-                <div class="col-lg-3 col-xs-12 links">
+                <div class="col-sm links">
                     <h4 class="mt-lg-0 mt-sm-3">Links</h4>
                     <ul class="m-0 p-0">
-                        <li>- <a href="#">Lorem ipsum</a></li>
-                        <li>- <a href="#">Nam mauris velit</a></li>
-                        <li>- <a href="#">Etiam vitae mauris</a></li>
-                        <li>- <a href="#">Fusce scelerisque</a></li>
-                        <li>- <a href="#">Sed faucibus</a></li>
-                        <li>- <a href="#">Mauris efficitur nulla</a></li>
+                        <li><a href="https://github.com/OpenCPA">GitHub Organization</a></li>
+                        <li><a href="https://github.com/OpenCPA/cpa">Server Repository</a></li>
+                        <li><a href="https://twitter.com/c272">Twitter</a></li>
+                        <li><a href="mailto://legal@opencpa.org">Legal</a></li>
+                        <li><a href="/copyright">Copyright Notices</a></li>
                     </ul>
-                </div>
-                <div class="col-lg-4 col-xs-12 location">
-                    <h4 class="mt-lg-0 mt-sm-4">Location</h4>
-                    <p>22, Lorem ipsum dolor, consectetur adipiscing</p>
-                    <p class="mb-0"><i class="fa fa-phone mr-3"></i>(541) 754-3010</p>
-                    <p><i class="fa fa-envelope-o mr-3"></i>info@hsdf.com</p>
                 </div>
             </div>
             <div class="row mt-5">
                 <div class="col copyright">
-                    <p class=""><small class="text-white-50">© 2019. All Rights Reserved.</small></p>
+                    <p class=""><small class="text-white-50">© The OpenCPA Group, 2020. All Rights Reserved.</small></p>
                 </div>
             </div>
         </div>

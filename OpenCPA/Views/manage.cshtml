@@ -2,26 +2,29 @@
 <html>
 @Html.Partial("header", Model.PageName)
 <body>
-    <h1>OpenCPA</h1>
-    <p>Welcome to the OpenCPA management console.</p>
-    <ul>
-        <li>
-            <a href="/manage/users">User Management</a>
-        </li>
-        <li>
-            <a href="/manage/artists">Artist Management</a>
-        </li>
-        <li>
-            <a href="/manage/albums">Album Management</a>
-        </li>
-        <li>
-            <a href="/manage/resources">Resource Management</a>
-        </li>
-    </ul>
-    <br>
-    @{
-        var year = DateTime.Now.Year.ToString();
-    }
-    <p><i>OpenCPA @Model.Version, (c) @year</i></p>
+    <br />
+    <div class="container">
+        <img src="/assets/logo_outline.png" style="width:30%"/>
+        <p>Welcome to the OpenCPA management console.</p>
+        <ul>
+            <li>
+                <a href="/manage/users">User Management</a>
+            </li>
+            <li>
+                <a href="/manage/artists">Artist Management</a>
+            </li>
+            <li>
+                <a href="/manage/albums">Album Management</a>
+            </li>
+            <li>
+                <a href="/manage/resources">Resource Management</a>
+            </li>
+        </ul>
+        <br>
+        @{
+            var year = DateTime.Now.Year.ToString();
+        }
+        <p><i>OpenCPA @Model.Version, (c) @year</i></p>
+    </div>
 </body>
 </html>

@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+
+<body>
+    @Html.Partial("nav")
+    <br />
+    <div class="container">
+        <h1>Browse Albums</h1>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="/albums?sort=a">A</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=b">B</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=c">C</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=d">D</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=e">E</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=f">F</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=g">G</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=h">H</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=i">I</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=j">J</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=k">K</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=l">L</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=m">M</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=n">N</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=o">O</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=p">P</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=q">Q</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=r">R</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=s">S</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=t">T</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=u">U</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=v">V</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=w">W</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=x">X</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=y">Y</a></li>
+                <li class="page-item"><a class="page-link" href="/albums?sort=z">Z</a></li>
+            </ul>
+        </nav>
+
+        <!-- Table of albums. -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">English Name</th>
+                    <th scope="col">Native Name</th>
+                    <th scope="col">Artist ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var album in Model.Albums)
+                {
+                    <tr>
+                        <th scope="row">@album.ID</th>
+                        <td><a href="/albums/view?id=@album.ID">@album.EnglishName</a></td>
+                        <td>@album.NativeName</td>
+                        @{
+                            string aid = "A" + album.Artist.ToString().PadLeft(4, '0');
+                        }
+                        <td><a href="/artists/view?id=@album.Artist">@aid</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (Model.Albums.Count == 0)
+        {
+            <p>No results found.</p>
+        }
+    </div>
+</body>
+</html>

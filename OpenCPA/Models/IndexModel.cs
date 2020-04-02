@@ -16,6 +16,7 @@ namespace OpenCPA.Models
         public static int NumArchivedGlobal { get; set; } = -1;
         public static DateTime StaticUpdateTime { get; set; } = DateTime.MinValue;
         public int NumArchived { get; set; } = 0;
+        public string Alert { get; set; } = null;
 
         public IndexModel()
         {

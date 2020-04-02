@@ -48,7 +48,7 @@ body {
 
     .footer .links li a:hover {
         text-decoration: none;
-        color: #4180CB;
+        color: #bdbdbd;
     }
 
 .footer .about-company i {
@@ -61,7 +61,7 @@ body {
 }
 
     .footer .about-company a:hover {
-        color: #4180CB;
+        color: #bdbdbd;
     }
 
 .footer .location i {
