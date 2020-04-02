@@ -285,6 +285,7 @@
     <Compile Include="Data\Track.cs" />
     <Compile Include="Models\LoginDetails.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\ViewAlbumModel.cs" />
     <Compile Include="Modules\ManagementModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Models\ManageModels.cs" />
@@ -315,6 +316,7 @@
     <Content Include="Views\manage_artists_edit.cshtml" />
     <Content Include="Views\manage_albums.cshtml" />
     <Content Include="Views\nav.cshtml" />
+    <Content Include="Views\view_album.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

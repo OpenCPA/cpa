@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("header", Model.PageName)
+@functions{ 
+    string secondsToMinutes(int secs)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(secs);
+        return time.ToString(@"mm\:ss");
+    }
+}
+<body>
+    @Html.Partial("nav")
+    <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                @if (Model.Album.AlbumArtGUID != null && Model.Album.AlbumArtGUID != "")
+                {
+                    <img src="/resources/@Model.Album.AlbumArtGUID" style="width:100%" />
+                }
+                else
+                {
+                    <img src="/assets/noimage.png" style="width:100%" />
+                }
+            </div>
+            <div class="col-sm">
+                <h2 data-toggle="tooltip" data-placement="right" title="@Model.Album.NativeName">@Model.Album.EnglishName</h2>
+                <p><i>by <a href="/artists/@Model.Artist.ID">@Model.Artist.EnglishName</a></i> (@Model.Artist.NativeName)</p>
+                <br />
+                <h4>Information</h4>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Release Year</td>
+                            <td>@Model.Album.ReleaseYear</td>
+                        </tr>
+                        <tr>
+                            <td>Artist</td>
+                            <td>@Model.Artist.EnglishName</td>
+                        </tr>
+                        <tr>
+                            <td>Tracks</td>
+                            <td>@Model.Tracks.Count</td>
+                        </tr>
+                        <tr>
+                            <td>Album ID</td>
+                            @{ 
+                                string rid = "R" + Model.Album.ID.ToString().PadLeft(4, '0');
+                            }
+                            <td>@rid</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4>Tracks</h4>
+                @if (Model.Tracks.Count == 0) {
+                    <p>No tracks archived.</p>
+                }
+                else
+                {
+                    <ul>
+                        @foreach (var track in Model.Tracks)
+                        {
+                            <li>@track.EnglishName (@track.NativeName) - @secondsToMinutes(track.Length)</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+</html>

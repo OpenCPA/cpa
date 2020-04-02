@@ -2,62 +2,65 @@
 <html>
 @Html.Partial("header", Model.PageName)
 <body>
-    <h1>Artist Management</h1>
-    <p><i>Manage existing artists, create and delete. (<a href="/manage">back</a>)</i></p>
-    @if (Model.Error != null)
-    {
-        <p style="color: red;">@Model.Error</p>
-    }
-    @if (Model.Message != null)
-    {
-        <p style="color: mediumseagreen;">@Model.Message</p>
-    }
-    <br>
-    <h3 style="padding-bottom:0px;margin-bottom:0px;">Edit Existing Artists</h3>
-    <table style="border-spacing: 1em; margin-top:0em;">
-        <tr>
-            <th>ID</th>
-            <th>English Name</th>
-            <th>Native Name</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        @foreach (var artist in Model.Artists)
+    <br />
+    <div class="container">
+        <h1>Artist Management</h1>
+        <p><i>Manage existing artists, create and delete. (<a href="/manage">back</a>)</i></p>
+        @if (Model.Error != null)
         {
-            <tr>
-                <td>@artist.ID</td>
-                <td>@artist.EnglishName</td>
-
-                <!-- De-entify HTML garbage here. -->
-                <td>@OpenCPA.ViewExtensions.EntityToUnicode(artist.NativeName)</td>
-                <td><a href="/manage/artists/edit?id=@artist.ID">Edit</a></td>
-                <td><a href="/manage/artists/delete?id=@artist.ID">Delete</a></td>
-            </tr>
+            <p style="color: red;">@Model.Error</p>
         }
-    </table>
+        @if (Model.Message != null)
+        {
+            <p style="color: mediumseagreen;">@Model.Message</p>
+        }
+        <br>
+        <h3 style="padding-bottom:0px;margin-bottom:0px;">Edit Existing Artists</h3>
+        <table style="border-spacing: 1em; margin-top:0em;">
+            <tr>
+                <th>ID</th>
+                <th>English Name</th>
+                <th>Native Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            @foreach (var artist in Model.Artists)
+            {
+                <tr>
+                    <td>@artist.ID</td>
+                    <td>@artist.EnglishName</td>
 
-    <!-- New artist form. -->
-    <h3>Create New Artist</h3>
-    <form action="/manage/artists/create" method="post">
-        <p>English Name:</p>
-        <input type="text" name="EnglishName" />
-        <br />
-        <p>Native Name:</p>
-        <input type="text" name="NativeName" />
-        <br />
-        <p>Profile Picture Link <i>(must be an image)</i>:</p>
-        <input type="text" name="ProfilePictureLink" />
-        <br />
-        <p>Description:</p>
-        <textarea name="Description"></textarea>
-        <br />
-        <button type="submit">Go</button>
-    </form>
+                    <!-- De-entify HTML garbage here. -->
+                    <td>@OpenCPA.ViewExtensions.EntityToUnicode(artist.NativeName)</td>
+                    <td><a href="/manage/artists/edit?id=@artist.ID">Edit</a></td>
+                    <td><a href="/manage/artists/delete?id=@artist.ID">Delete</a></td>
+                </tr>
+            }
+        </table>
 
-    <br/>
-    @{
-        var year = DateTime.Now.Year.ToString();
-    }
-    <p><i>OpenCPA, @Model.Version (c) @year</i></p>
+        <!-- New artist form. -->
+        <h3>Create New Artist</h3>
+        <form action="/manage/artists/create" method="post">
+            <p>English Name:</p>
+            <input type="text" name="EnglishName" />
+            <br />
+            <p>Native Name:</p>
+            <input type="text" name="NativeName" />
+            <br />
+            <p>Profile Picture Link <i>(must be an image)</i>:</p>
+            <input type="text" name="ProfilePictureLink" />
+            <br />
+            <p>Description:</p>
+            <textarea name="Description"></textarea>
+            <br />
+            <button type="submit">Go</button>
+        </form>
+
+        <br />
+        @{
+            var year = DateTime.Now.Year.ToString();
+        }
+        <p><i>OpenCPA, @Model.Version (c) @year</i></p>
+    </div>
 </body>
 </html>

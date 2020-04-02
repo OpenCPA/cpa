@@ -53,12 +53,12 @@
                 {
                     <tr>
                         <th scope="row">@album.ID</th>
-                        <td><a href="/albums/view?id=@album.ID">@album.EnglishName</a></td>
+                        <td><a href="/albums/@album.ID">@album.EnglishName</a></td>
                         <td>@album.NativeName</td>
                         @{
                             string aid = "A" + album.Artist.ToString().PadLeft(4, '0');
                         }
-                        <td><a href="/artists/view?id=@album.Artist">@aid</a></td>
+                        <td><a href="/artists/@album.Artist">@aid</a></td>
                     </tr>
                 }
             </tbody>

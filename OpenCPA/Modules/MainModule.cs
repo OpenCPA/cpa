@@ -69,6 +69,51 @@ namespace OpenCPA
                 var artists = DBMan.Instance.Query<Artist>("SELECT * FROM Artists WHERE (lower(EnglishName) LIKE '" + sortLetter.ToLower() + "%')");
                 return View["artists", new ArtistsModel(artists)];
             });
+
+            //View an album.
+            Get("/albums/{id}", (req) =>
+            {
+                //Attempt to get the ID.
+                int id;
+                try
+                {
+                    id = int.Parse(req.id.ToString());
+                }
+                catch
+                {
+                    //Invalid ID.
+                    return Response.AsRedirect("/");
+                }
+
+                //Is the ID valid?
+                Album album = DBMan.Instance.FindWithQuery<Album>("SELECT * FROM Albums WHERE ID=?", id);
+                if (album == null)
+                {
+                    //Invalid.
+                    return Response.AsRedirect("/");
+                }
+
+                //Get the artist for this album.
+                Artist artist = DBMan.Instance.FindWithQuery<Artist>("SELECT * FROM Albums WHERE ID=?", album.Artist);
+                if (artist == null)
+                {
+                    //Invalid artist.
+                    return Response.AsRedirect("/");
+                }
+
+                //Get all the tracks for this album.
+                List<string> trackIDs = album.Tracks == null ? new List<string>() : album.Tracks.Split(',').ToList();
+                trackIDs.RemoveAll(x => x == "");
+                List<Track> tracks = new List<Track>();
+                foreach (var tid in trackIDs)
+                {
+                    Track track = DBMan.Instance.FindWithQuery<Track>("SELECT * FROM Tracks WHERE ID=?", tid);
+                    tracks.Add(track);
+                }
+
+                //Load the view!
+                return View["view_album", new ViewAlbumModel(album, artist, tracks)];
+            });
         }
     }
 }
