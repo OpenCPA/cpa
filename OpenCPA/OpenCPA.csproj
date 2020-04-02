@@ -258,7 +258,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="StaticAssets\index.css" />
     <Content Include="Views\edit_album.cshtml" />
+    <Content Include="StaticAssets\login.less" />
     <None Include="Views\header.cshtml" />
     <None Include="Views\index.cshtml" />
     <None Include="Views\login.cshtml" />
@@ -308,6 +310,7 @@
     <Content Include="Views\manage_user_reset.cshtml" />
     <Content Include="Views\manage_artists_edit.cshtml" />
     <Content Include="Views\manage_albums.cshtml" />
+    <Content Include="Views\nav.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -319,6 +322,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

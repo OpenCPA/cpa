@@ -1,6 +1,7 @@
 ﻿using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using Nancy.TinyIoc;
 using OpenCPA;
 using OpenCPA.Data;
@@ -25,5 +26,15 @@ public class CPABootstrapper : DefaultNancyBootstrapper
             UserMapper = new UserDB(), //maps GUIDs to users
             RedirectUrl = "/login/noauth" //where to redirect upon failed auth.
         });
+
+    }
+
+    /// <summary>
+    /// Configures static content directories.
+    /// </summary>
+    protected override void ConfigureConventions(NancyConventions conventions)
+    {
+        base.ConfigureConventions(conventions);
+        conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("assets", @"StaticAssets/"));
     }
 }
